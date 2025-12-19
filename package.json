@@ -1,10 +1,17 @@
 {
   "name": "pulse-ts",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Tiny TypeScript-first event emitter with typed event maps",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js",
+      "default": "./dist/index.es.js"
+    }
+  },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && vite build",
+    "build": "vite build && tsc -p tsconfig.build.json",
     "prepare": "npm run build"
   },
   "keywords": [
@@ -18,8 +25,8 @@
   "files": [
     "dist"
   ],
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
   "devDependencies": {
     "typescript": "~5.9.3",
