@@ -21,11 +21,38 @@ export class Pulse<EM extends EventMap = Record<string, EventPayload>> {
     return () => this.off(event, handler as any);
   }
 
+  // NEW: Listen only once (auto-unsubscribe after first emit)
+  once<K extends keyof EM & string>(event: K, handler: HandlerFor<EM, K>) {
+    const onceHandler = (payload: EM[K]) => {
+      // First, remove the listener
+      this.off(event, onceHandler as any);
+      // Then call the original handler
+      (handler as Function)(payload);
+    };
+    
+    return this.on(event, onceHandler as any);
+  }
+
   off<K extends keyof EM & string>(event: K, handler: HandlerFor<EM, K>) {
     const set = this.handlers.get(event);
     if (!set) return;
     set.delete(handler as Function);
     if (set.size === 0) this.handlers.delete(event);
+  }
+
+  // NEW: Unsubscribe ALL listeners for an event
+  unsubscribe<K extends keyof EM & string>(event: K) {
+    this.handlers.delete(event);
+  }
+
+  // Alias for unsubscribe
+  offAll<K extends keyof EM & string>(event: K) {
+    this.unsubscribe(event);
+  }
+
+  // Clear ALL events
+  clear() {
+    this.handlers.clear();
   }
 
   async emit<K extends keyof EM & string>(event: K, payload: EM[K]) {

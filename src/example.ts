@@ -3,7 +3,7 @@ import { createListener } from "./core/listner";
 
 // Quick untyped usage (convenience)
 const unsubscribe = defineEvent("user:created", async (payload) => {
-  console.log("(untyped) User created:", payload);
+  // console.log("(untyped) User created:", payload);
 });
 
 void (async () => {
@@ -20,7 +20,7 @@ type MyEvents = {
 const typedPulse = createPulse<MyEvents>();
 
 typedPulse.on("user:created", async (p) => {
-  console.log("(typed) user created -> id", p.id, "name", p.name);
+  // console.log("(typed) user created -> id", p.id, "name", p.name);
 });
 
 void (async () => {
@@ -30,7 +30,7 @@ void (async () => {
 // Use createListener to group multiple handlers and unsubscribe together
 const listener = createListener(typedPulse, {
   "order:placed": (o) => {
-    console.log("(listener) order placed:", o.orderId, "total", o.total);
+    // console.log("(listener) order placed:", o.orderId, "total", o.total);
   },
 });
 
