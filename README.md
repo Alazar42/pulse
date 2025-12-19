@@ -1,49 +1,79 @@
- # Pulse (pulse-ts)
+# Pulse (pulse-ts)
 
-  Pulse is a tiny, developer-friendly TypeScript-first event emitter. It focuses on
-  providing a clear API for both quick untyped usage and strongly-typed event
-  maps for production-grade TypeScript projects.
+![Pulse Logo](docs/pulse.png)
 
-  Install
+Pulse is a tiny, developer-friendly TypeScript-first event emitter with a minimal,
+well-typed API for both quick untyped usage and production-grade TypeScript
+event maps.
 
-  ```bash
-  npm install pulse-ts
-  ```
+Install
 
-  Quick start (developer-focused)
+```bash
+# npm
+npm install pulse-ts
 
-  ```ts
-  import { pulse, defineEvent, createPulse, createListener } from 'pulse-ts';
+# yarn
+yarn add pulse-ts
 
-  // Convenience (untyped)
-  const unsub = defineEvent('user:created', (payload) => console.log('user', payload));
-  await pulse.emit('user:created', { id: 1, name: 'Alice' });
-  unsub();
+# pnpm
+pnpm add pulse-ts
+```
 
-  // Strongly-typed event map
-  type MyEvents = {
-    'user:created': { id: number; name: string };
-    'order:placed': { orderId: string; total: number };
-  };
+Known example — counterPulse
 
-  const p = createPulse<MyEvents>();
-  p.on('user:created', (u) => console.log(u.id, u.name));
-  await p.emit('user:created', { id: 42, name: 'Bob' });
+```ts
+import { createPulse } from 'pulse-ts';
 
-  // Group and remove listeners together
-  const listener = createListener(p, {
-    'order:placed': (o) => console.log('order', o.orderId, o.total),
-  });
-  await p.emit('order:placed', { orderId: 'abc-1', total: 99.5 });
-  listener.off();
-  ```
+export const counterPulse = createPulse();
 
-  Module exports
+counterPulse.on('counter:incremented', (counter) => {
+  console.log(`Counter: ${counter.count}`);
 
-  Public API is exported from the package entry:
+  if (counter.count >= 10) {
+    console.log('Reached 10, unsubscribing');
+    counterPulse.unsubscribe('counter:incremented');
+  }
+});
+```
 
-  - `createPulse` — make a typed emitter instance
-  - `pulse` — default untyped singleton (convenience)
-  - `defineEvent` — quick registration + unsubscribe
-  - `createListener` — register grouped handlers and `off()`
-  - `EventMap`, `HandlerFor` — useful type helpers
+Quick examples
+
+- one-time listener (auto-unsubscribe after first emit)
+
+```ts
+const p = createPulse<{ 'ready': void }>();
+p.once('ready', () => console.log('ready fired once'));
+await p.emit('ready', undefined);
+```
+
+- clear all listeners
+
+```ts
+p.clear();
+```
+
+API
+
+- createPulse<E>() — create a typed Pulse instance
+  - p.on(event, handler) — register a handler; returns an unsubscribe function for that handler
+  - p.once(event, handler) — register a handler that is removed automatically after first emit
+  - p.off(event, handler) — remove a specific handler
+  - p.unsubscribe(event) — remove all handlers for an event
+  - p.offAll(event) — alias for unsubscribe(event)
+  - p.clear() — remove all handlers across all events
+  - p.emit(event, payload) — emit an event; handlers may be async
+- pulse — default untyped singleton for quick use
+- defineEvent(name, handler) — register handler and return an unsubscribe function
+- createListener(pulse, handlers) — register multiple handlers and return { off() }
+- Types: EventMap, HandlerFor — helpers for typing handlers
+
+Notes
+
+- Emissions are async-friendly; handlers can return promises.
+- Small, dependency-free, and focused on type safety and ergonomics.
+
+Contributing
+
+PRs and issues welcome. Run tests and follow existing project formatting.
+
+[MIT LICENSE](LICENSE)
