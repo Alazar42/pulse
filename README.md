@@ -1,6 +1,6 @@
 # Pulse (pulse-ts)
 
-![Pulse Logo](docs/pulse.png)
+![Pulse Logo](https://github.com/Alazar42/pulse/raw/master/docs/pulse.png)
 
 Pulse is a tiny, developer-friendly TypeScript-first event emitter with a minimal,
 well-typed API for both quick untyped usage and production-grade TypeScript
