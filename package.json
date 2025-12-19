@@ -1,0 +1,21 @@
+{
+  "name": "pulse-ts",
+  "version": "1.0.0",
+  "description": "Tiny TypeScript-first event emitter with typed event maps",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && vite build",
+    "prepare": "npm run build"
+  },
+  "keywords": ["events", "emitter", "typescript", "pulse"],
+  "author": "Mickyas Tesfaye",
+  "license": "MIT",
+  "files": ["dist"],
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "devDependencies": {
+    "typescript": "~5.9.3",
+    "vite": "^7.2.4"
+  }
+}
