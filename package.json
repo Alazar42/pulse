@@ -1,6 +1,6 @@
 {
   "name": "pulse-ts",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Tiny TypeScript-first event emitter with typed event maps",
   "type": "module",
   "exports": {
@@ -11,14 +11,21 @@
     }
   },
   "scripts": {
-    "build": "vite build && tsc -p tsconfig.build.json",
-    "prepare": "npm run build"
+    "dev": "vite",
+    "build": "npm run build:lib && npm run build:site",
+    "build:lib": "tsc -p tsconfig.build.json",
+    "build:site": "vite build",
+    "prepublishOnly": "npm run build:lib",
+    "preview": "vite preview",
+    "test": "echo \"No tests specified\""
   },
   "keywords": [
     "events",
     "emitter",
     "typescript",
-    "pulse"
+    "pulse",
+    "state",
+    "reactive"
   ],
   "author": "Mickyas Tesfaye",
   "license": "MIT",
@@ -31,5 +38,13 @@
   "devDependencies": {
     "typescript": "~5.9.3",
     "vite": "^7.2.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Alazar42/pulse-ts"
+  },
+  "bugs": {
+    "url": "https://github.com/Alazar42/pulse-ts/issues"
+  },
+  "homepage": "https://github.com/Alazar42/pulse-ts#readme"
 }
